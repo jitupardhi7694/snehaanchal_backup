@@ -1,0 +1,143 @@
+<%- include('../layouts/partials/messages.ejs') %>
+  <div class="row" style="margin-top: 20px">
+    <div class="col-md-10 mx-auto">
+      <div class="card card-body shadow">
+        <h2 class="text-center mb-3">
+          <i class="bi bi-box-arrow-in-right"></i>Religion Master
+        </h2>
+        <form class="needs-validation" action="/religion" method="POST" novalidate id="demo">
+          <div class="form-floating mb-4">
+            <input autofocus type="text" id="id" name="id" class="form-control" hidden />
+            <input autofocus type="text" id="religion" name="religionName" class="form-control"
+              placeholder="Religion Name" value="<%= typeof religionName != 'undefined' ? religionName : '' %>"
+              required />
+            <label class="form-label" for="religion">Religion Name</label>
+            <div class="invalid-feedback">Please enter a religion name</div>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-block bg-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- table -->
+  <div class="row" style="margin-top: 20px">
+    <div class="col-md-10 mx-auto">
+      <div class="card card-body" style="height: 50%">
+        <div class="table-wrapper-scroll-y my-custom-scrollbar" style="
+          position: relative;
+
+          overflow: auto;
+          display: block;
+        ">
+          <table class="table table-bordered border-dark table-hover" id="table">
+            <tr>
+              <!-- <th>S.N</th> -->
+              <th>Id</th>
+              <th>Religion</th>
+              <th>Action</th>
+            </tr>
+
+            <% if(userData.length!=0) { var i=1; userData.forEach(function(data){ %>
+              <tr>
+                <!-- <td><%=i; %></td> -->
+                <td>
+                  <%=data.id %>
+                </td>
+                <td>
+                  <%=data.religion %>
+                </td>
+                <td>
+                  <button class="btn btn-success btn-sm" value="<%= userData[i]%>" id="religion"
+                    onclick="editRow(this.value);">
+                    <i class="fa fa-user"></i>
+                  </button>
+
+                  <a href="/religion/<%= data.id %>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                </td>
+              </tr>
+              <% i++; }) %>
+                <% } else{ %>
+                  <tr>
+                    <td colspan="7">No Data Found</td>
+                  </tr>
+                  <% } %>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll(".needs-validation");
+
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener(
+          "submit",
+          function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+          },
+          false
+        );
+      });
+    })();
+
+    // get selected row
+
+    var table = document.getElementById("table"),
+      rIndex;
+    for (var i = 0; i < table.rows.length; i++) {
+      table.rows[i].onclick = function () {
+        rIndex = this.rowIndex;
+
+        document.getElementById("id").value = this.cells[0].innerHTML;
+        document.getElementById("religion").value = this.cells[1].innerHTML;
+      };
+    }
+
+    function editRow(index) {
+      table.rows[rIndex].cells[0].innerHtml = document.getElementById("id").value;
+      table.rows[rIndex].cells[1].innerHtml =
+        document.getElementById("religion").value;
+    }
+  </script>
+
+  <style>
+    table tr:not(:first-child) {
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+    }
+
+    table tr:not(:first-child):hover {
+      background-color: #ddd;
+    }
+  </style>
